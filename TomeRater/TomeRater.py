@@ -82,7 +82,8 @@ class Book(object):
         for rating in self.ratings:
             summary += rating
             i += 1
-        average = float(summary / i)
+        if i > 0:
+            average = float(summary / i)
         return average    
 #class Fiction represents as subclass from book all Fiction Books        
 class Fiction(Book):
@@ -142,14 +143,13 @@ class TomeRater():
         return True  
     #This method adds a book to a user
     def add_book_to_user(self,book,email,rating = None):
-        print("in add book: " + book.title + " to user: " + email)
         #check if user exists in TomeRater
         if email in self.users.keys():
             #check if isbn already exists in users books
             if self.check_isbn(book):
                 self.users[email].read_book(book,rating)
-            if rating is not None:
-                book.add_rating(rating)
+                if rating is not None:
+                    book.add_rating(rating)
                 if book not in self.books:
                     self.books[book] = 1
                 else:
@@ -163,14 +163,15 @@ class TomeRater():
         if ("@" in email) and ((".org" in email) or (".edu" in email) or (".com" in email)):
             #check if user already exists
             if email in self.users:
-                print("User alredy exists!")
+                print("User " + name + "User already exists!")
             else:
-                self.users[email] = User(name,email) 
-                if user_books is not None:
+                self.users[email] = User(name,email)
+                print("\nnew user added: " + name) 
+                if user_books is not None: 
                     for book in user_books:
                         self.add_book_to_user(book,email)
         else:
-            print("Email-address is not valid!")
+            print("User " + name + ": Email-address is not valid!")
     #iterates through self.books and prints them
     def print_catalog(self):
         for key in self.books.keys():
